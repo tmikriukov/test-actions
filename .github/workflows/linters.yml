@@ -34,5 +34,3 @@ jobs:
       - name: Formatting and Security Checks
         run: |
           bundle exec rubocop
-          bundle exec brakeman -z
-          bundle exec bundle-audit update      
