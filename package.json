@@ -86,6 +86,6 @@
     "version": "0.1.0",
     "engines": {
       "node": "16.16.0",
-      "yarn": "1.22.19"
+      "yarn": "latest"
     }
   }
