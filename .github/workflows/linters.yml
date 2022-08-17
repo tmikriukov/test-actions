@@ -1,0 +1,38 @@
+env:
+  RUBY_VERSION: 2.7.3
+
+on:
+  push:
+    branches:
+      - '**'
+      
+jobs:
+  # LINTERS
+  linters_ruby:
+    name: Linters Ruby
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v1
+      - name: Set up Ruby
+        uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: ${{ env.RUBY_VERSION }}
+      - name: Restore Bundler cache
+        id: cache
+        uses: actions/cache@v2
+        with:
+          path: vendor/bundle
+          key: ${{ runner.os }}-gems-${{ hashFiles('**/Gemfile.lock') }}
+          restore-keys: |
+            ${{ runner.os }}-gems-
+      - name: Bundle Install
+        run: |
+          gem install bundler
+          bundle config path vendor/bundle
+          bundle config --global jobs 4
+          bundle install
+      - name: Formatting and Security Checks
+        run: |
+          bundle exec rubocop
+          bundle exec brakeman -z
+          bundle exec bundle-audit update      
