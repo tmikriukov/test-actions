@@ -48,10 +48,5 @@
       "lines-between-class-members": "off",
       "prefer-promise-reject-errors": "off",
       "consistent-return": "off"
-    },
-    "settings": {
-      "import/resolver": {
-        "babel-module": {}
-      }
     }
   }
