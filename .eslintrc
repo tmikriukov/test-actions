@@ -1,8 +1,8 @@
 {
     "parser": "babel-eslint",
     "root": true,
-    "extends": ["airbnb", "prettier", "prettier/flowtype", "prettier/react"],
-    "plugins": ["prettier", "flowtype", "react"],
+    "extends": ["prettier"],
+    "plugins": ["prettier"],
     "parserOptions": {
       "ecmaVersion": 6,
       "ecmaFeatures": {
