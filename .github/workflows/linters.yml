@@ -7,52 +7,58 @@ on:
       - '**'
       
 jobs:
-  # LINTERS
+  - uses: dorny/paths-filter@v2
+    id: filter
+    with:
+      filters: |
+            linters_js:
+              - 'scripts/*.{css,html,js,json,jsx,sass,scss,ts,tsx,vue,yaml,yml}'
+              - '**/*.{css,html,js,json,jsx,sass,scss,ts,tsx,vue}'
+            linters_ruby:
+              - '**/*.{rb,erb,rake}'
+              - '{config.ru,Dockerfile,Envfile,Gemfile,Gemfile.lock,Makefile,Rakefile,.rubocop.yml,ruby-version}'  
+
+  if: steps.filter.outputs.linters_js == 'true'
   linters_ruby:
     name: Linters Ruby
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v1
+      - uses: actions/checkout@v2
       - name: Set up Ruby
+        #if: steps.filter.outputs.linters_js == 'true'
         uses: ruby/setup-ruby@v1
         with:
           ruby-version: ${{ env.RUBY_VERSION }}
           bundler-cache: true
       - name: Formatting and Security Checks
+        #if: steps.filter.outputs.linters_js == 'true'
         run: |
           bundle exec rubocop
 
+  if: steps.filter.outputs.linters_js == 'true'
   linters_js:
     name: Linters JS
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
-
-      - uses: dorny/paths-filter@v2
-        id: filter
-        with:
-          filters: |
-            linters_js:
-              - 'scripts/*.{css,html,js,json,jsx,sass,scss,ts,tsx,vue,yaml,yml}'
-          # - '**/*.{css,html,js,json,jsx,sass,scss,ts,tsx,vue,yaml,yml}'
       - name: Set up Node.js
-        if: steps.filter.outputs.linters_js == 'true'
+        #if: steps.filter.outputs.linters_js == 'true'
         uses: actions/setup-node@v1
         with:
           node-version: ${{ env.NODE_VERSION }}
       - name: Set up NPM authentication
-        if: steps.filter.outputs.linters_js == 'true'
+        #if: steps.filter.outputs.linters_js == 'true'
         run: |
           echo "always-auth=true" >> ~/.npmrc
           echo "//npm.pkg.github.com/:_authToken=${{ secrets.READ_GITHUB_PKG_TOKEN }}" >> ~/.npmrc
           echo "@strongsdcom:registry=https://npm.pkg.github.com/" >> ~/.npmrc
       - name: Install Node.js dependencies
-        if: steps.filter.outputs.linters_js == 'true'
+        #if: steps.filter.outputs.linters_js == 'true'
         run: |
           yarn policies set-version ${{ env.YARN_VERSION }}
           yarn install
       - name: Run linters
-        if: steps.filter.outputs.linters_js == 'true'
+        #if: steps.filter.outputs.linters_js == 'true'
         uses: wearerequired/lint-action@v1
         with:
           github_token: ${{ github.token }}
