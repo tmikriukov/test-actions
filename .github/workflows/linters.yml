@@ -23,10 +23,8 @@ jobs:
               - '**/*.{rb,erb,rake}'
               - '{config.ru,Dockerfile,Envfile,Gemfile,Gemfile.lock,Makefile,Rakefile,.rubocop.yml,ruby-version}'  
 
-  linters_ruby:
     name: Linters Ruby
     if: steps.filter.outputs.linters_ruby == 'true'
-    runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
       - name: Set up Ruby
@@ -38,10 +36,8 @@ jobs:
         run: |
           bundle exec rubocop
 
-  linters_js:
     name: Linters JS
     if: steps.filter.outputs.linters_js == 'true'
-    runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
       - name: Set up Node.js
