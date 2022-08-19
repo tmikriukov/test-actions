@@ -23,39 +23,39 @@ jobs:
               - '**/*.{rb,erb,rake}'
               - '{config.ru,Dockerfile,Envfile,Gemfile,Gemfile.lock,Makefile,Rakefile,.rubocop.yml,ruby-version}'  
 
-    name: Linters Ruby
-    if: steps.filter.outputs.linters_ruby == 'true'
-    steps:
-      - uses: actions/checkout@v2
-      - name: Set up Ruby
-        uses: ruby/setup-ruby@v1
-        with:
-          ruby-version: ${{ env.RUBY_VERSION }}
-          bundler-cache: true
+      - name: Linters Ruby
+      if: steps.filter.outputs.linters_ruby == 'true'
+      steps:
+        - uses: actions/checkout@v2
+        - name: Set up Ruby
+          uses: ruby/setup-ruby@v1
+          with:
+            ruby-version: ${{ env.RUBY_VERSION }}
+            bundler-cache: true
       - name: Formatting and Security Checks
         run: |
           bundle exec rubocop
 
-    name: Linters JS
-    if: steps.filter.outputs.linters_js == 'true'
-    steps:
-      - uses: actions/checkout@v2
-      - name: Set up Node.js
-        uses: actions/setup-node@v1
-        with:
-          node-version: ${{ env.NODE_VERSION }}
-      - name: Set up NPM authentication
-        run: |
-          echo "always-auth=true" >> ~/.npmrc
-          echo "//npm.pkg.github.com/:_authToken=${{ secrets.READ_GITHUB_PKG_TOKEN }}" >> ~/.npmrc
-          echo "@strongsdcom:registry=https://npm.pkg.github.com/" >> ~/.npmrc
-      - name: Install Node.js dependencies
-        run: |
-          yarn policies set-version ${{ env.YARN_VERSION }}
-          yarn install
-      - name: Run linters
-        uses: wearerequired/lint-action@v1
-        with:
-          github_token: ${{ github.token }}
-          eslint: true
-          #prettier: true
+      - name: Linters JS
+      if: steps.filter.outputs.linters_js == 'true'
+      steps:
+        - uses: actions/checkout@v2
+        - name: Set up Node.js
+        - uses: actions/setup-node@v1
+          with:
+            node-version: ${{ env.NODE_VERSION }}
+        - name: Set up NPM authentication
+          run: |
+            echo "always-auth=true" >> ~/.npmrc
+            echo "//npm.pkg.github.com/:_authToken=${{ secrets.READ_GITHUB_PKG_TOKEN }}" >> ~/.npmrc
+            echo "@strongsdcom:registry=https://npm.pkg.github.com/" >> ~/.npmrc
+        - name: Install Node.js dependencies
+          run: |
+            yarn policies set-version ${{ env.YARN_VERSION }}
+            yarn install
+        - name: Run linters
+        - uses: wearerequired/lint-action@v1
+          with:
+            github_token: ${{ github.token }}
+            eslint: true
+            #prettier: true
