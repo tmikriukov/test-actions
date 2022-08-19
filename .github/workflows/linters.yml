@@ -7,9 +7,8 @@ on:
       - '**'
       
 jobs:
-  # LINTERS
-  linters_ruby:
-    name: Linters Ruby
+  linters:
+    name: Linters
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v1
@@ -20,29 +19,21 @@ jobs:
             linters_ruby:
               - '**/*.{rb,erb,rake}'
               - '{config.ru,Dockerfile,Envfile,Gemfile,Gemfile.lock,Makefile,Rakefile,.rubocop.yml,ruby-version}'
+            linters_js:
+              - 'scripts/*.{css,html,js,json,jsx,sass,scss,ts,tsx,vue,yaml,yml}'
+              - '**/*.{css,html,js,json,jsx,sass,scss,ts,tsx,vue}'
+
       - name: Set up Ruby
-        if: steps.filter.outputs.linters_js == 'true'
+        if: steps.filter.outputs.linters_ruby == 'true'
         uses: ruby/setup-ruby@v1
         with:
           ruby-version: ${{ env.RUBY_VERSION }}
           bundler-cache: true
       - name: Formatting and Security Checks
-        if: steps.filter.outputs.linters_js == 'true'
+        if: steps.filter.outputs.linters_ruby == 'true'
         run: |
           bundle exec rubocop
 
-  linters_js:
-    name: Linters JS
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v2
-      - uses: dorny/paths-filter@v2
-        id: filter
-        with:
-          filters: |
-            linters_js:
-              - 'scripts/*.{css,html,js,json,jsx,sass,scss,ts,tsx,vue,yaml,yml}'
-              - '**/*.{css,html,js,json,jsx,sass,scss,ts,tsx,vue}'
       - name: Set up Node.js
         if: steps.filter.outputs.linters_js == 'true'
         uses: actions/setup-node@v1
@@ -65,4 +56,4 @@ jobs:
         with:
           github_token: ${{ github.token }}
           eslint: true
-            #prettier: true
+            #prettier: true    
