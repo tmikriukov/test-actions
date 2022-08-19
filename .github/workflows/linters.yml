@@ -21,11 +21,13 @@ jobs:
               - '**/*.{rb,erb,rake}'
               - '{config.ru,Dockerfile,Envfile,Gemfile,Gemfile.lock,Makefile,Rakefile,.rubocop.yml,ruby-version}'
       - name: Set up Ruby
+        if: steps.filter.outputs.linters_js == 'true'
         uses: ruby/setup-ruby@v1
         with:
           ruby-version: ${{ env.RUBY_VERSION }}
           bundler-cache: true
       - name: Formatting and Security Checks
+        if: steps.filter.outputs.linters_js == 'true'
         run: |
           bundle exec rubocop
 
