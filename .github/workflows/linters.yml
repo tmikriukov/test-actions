@@ -68,7 +68,7 @@ jobs:
               curl -X POST https://api.github.com/repos/mako-max/test-actions/check-runs \
                 -H "Accept: application/vnd.github+json" \
                 -H "Authorization: token ${{ github.token }}" \
-                -d "{\"name\":$linter_name,\"head_sha\":${{ github.sha }},\"status\":\"completed\",\"conclusion\":\"success\",\"output\":{\"title\":$linter_name\" report\",\"summary\":\"\",\"text\":\"Linter passed since none of the files changed\"}}"
+                -d {"name":$linter_name,"head_sha":"${{ github.sha }}","status":"completed","conclusion":"success","output":{"title":$linter_name" report","summary":"","text":"Linter passed since none of the files changed"}}
             done
           else
             echo "Step skipped since files were changed"
