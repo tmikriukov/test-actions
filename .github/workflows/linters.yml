@@ -17,11 +17,10 @@ jobs:
         with:
           filters: |
             linters_ruby:
-              - '**/*.{rb,erb,rake}'
+              - '!(.deploy/|.github/)**/*.{rb,erb,rake}'
               - '{config.ru,Dockerfile,Envfile,Gemfile,Gemfile.lock,Makefile,Rakefile,.rubocop.yml,ruby-version}'
             linters_js:
-              - 'scripts/*.{css,html,js,json,jsx,sass,scss,ts,tsx,vue,yaml,yml}'
-              - '**/*.{css,html,js,json,jsx,sass,scss,ts,tsx,vue}'
+              - '!(.deploy/|.github/)**/*.{css,html,js,json,jsx,sass,scss,ts,tsx,vue}'
 
       - name: Set up Ruby
         if: steps.filter.outputs.linters_ruby == 'true'
@@ -56,4 +55,12 @@ jobs:
         with:
           github_token: ${{ github.token }}
           eslint: true
-            #prettier: true    
+            #prettier: true
+      - name: Create custom check-run JS
+        if: steps.filter.outputs.linters_js == 'false'
+        run: |
+          curl -X POST https://api.github.com/repos/mako-max/test-actions/check-runs \
+                -H "Accept: application/vnd.github+json" \
+                -H "Authorization: token ${{ github.token }}" \
+                -d '{"name":"mighty_readme","head_sha":"${{ github.sha }}","status":"in_progress","external_id":"42","started_at":"2022-08-22T01:14:52Z","output":{"title":"Mighty Readme report","summary":"","text":""}}'
+         
