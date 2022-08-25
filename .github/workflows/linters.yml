@@ -62,23 +62,14 @@ jobs:
         run: |
           #!/usr/bin/env bash
           Linter_names=('ESlint' 'Prettier')
-          echo $LINTERS_JS_FILTER_STATUS
 
           if [[ $LINTERS_JS_FILTER_STATUS == false ]]; then
             for linter_name in "${Linter_names[@]}"; do
               curl -X POST https://api.github.com/repos/mako-max/test-actions/check-runs \
                 -H "Accept: application/vnd.github+json" \
                 -H "Authorization: token ${{ github.token }}" \
-                -d '{"name":$linter_name,"head_sha":"${{ github.sha }}","status":"completed","conclusion":"success","output":{"title":"$linter_name report","summary":"","text":"Linter passed since none of the files changed"}}'
+                -d '{"name":"${linter_name}","head_sha":"${{ github.sha }}","status":"completed","conclusion":"success","output":{"title":"${linter_name} report","summary":"","text":"Linter passed since none of the files changed"}}'
             done
           else
             echo "Step skiped since files were changed"
           fi
-
-      # - name: Prettier
-      #   if: steps.filter.outputs.linters_js == 'false'
-      #   run: |
-      #     curl -X POST https://api.github.com/repos/mako-max/test-actions/check-runs \
-      #           -H "Accept: application/vnd.github+json" \
-      #           -H "Authorization: token ${{ github.token }}" \
-      #           -d '{"name":"Prettier","head_sha":"${{ github.sha }}","status":"completed","conclusion":"success","output":{"title":"Prettier report","summary":"","text":"Linter passed since none of the files changed"}}'
