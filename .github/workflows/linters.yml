@@ -58,7 +58,7 @@ jobs:
             #prettier: true
       - name: Set up linters status
         env:
-          LINTERS_JS_FILTER_STATUS: steps.filter.outputs.linters_js
+          LINTERS_JS_FILTER_STATUS: ${{ steps.filter.outputs.linters_js }}
         run: |
           #!/usr/bin/env bash
           Linter_names=('ESlint' 'Prettier')
